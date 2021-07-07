@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics.Contracts;
 
 namespace Clone_Graph
 {
@@ -10,7 +8,7 @@ namespace Clone_Graph
         public class Node
         {
             public int val;
-            public IList<Node> neighbors;
+            public List<Node> neighbors;
 
             public Node()
             {
@@ -33,7 +31,18 @@ namespace Clone_Graph
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+
+            Node node1 = new Node(1);
+            Node node2 = new Node(2);
+            Node node3 = new Node(3);
+            Node node4 = new Node(4);
+
+            node1.neighbors = new List<Node>() { node2, node4 };
+            node2.neighbors = new List<Node>() { node1, node3 };
+            node3.neighbors = new List<Node>() { node2, node4 };
+            node4.neighbors = new List<Node>() { node1, node3 };
+            Node cloned = CloneGraph_Iterative(node1);
+            Console.ReadKey();
         }
 
         static Dictionary<Node, Node> kv = new Dictionary<Node, Node>();
