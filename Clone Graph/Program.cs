@@ -61,27 +61,32 @@ namespace Clone_Graph
 
         static Node CloneGraph_Iterative(Node node)
         {
-            if (node == null) return null;
-            Dictionary<Node, Node> keyValuePairs = new Dictionary<Node, Node>();
-            Queue<Node> queue = new Queue<Node>();
-            Node clone = new Node(node.val);
-            queue.Enqueue(node);
-            keyValuePairs.Add(node, clone);
-            while(queue.Count > 0)
-            {
-                Node popped = queue.Dequeue();
-                foreach(var n in popped.neighbors)
-                {
-                    if (!keyValuePairs.ContainsKey(n))
-                    {
-                        keyValuePairs.Add(n, new Node(n.val));
-                        queue.Enqueue(n);
-                    }
-                    keyValuePairs[popped].neighbors.Add(keyValuePairs[n]);
-                }
+           if(node == null) return node;
+          // We need to perform DFS here
+          // Will take Queue for DFS, will push the node initially to q to start DFS, as question says "The given node will always be the first node with val = 1."
+          // in DFS using Q, we add a condition while(q is not empty){} in inside we push each node during DFS traversal for a particular node.
+          // Will be using Dictioanry<int, Node> as the visited DS to check if any node is already processed or not and also for the output for this problem. 
+          // in visited will be pushing a new node(val) always, which will be used later to add the neighbours.
+          // initially will be pushing node to Q and also to visited(here will be creating a new node with the node.val, visited.Add(node.val, new Node(node.val))
+          Queue<Node> q = new Queue<Node>();
+          var clone = new Node(node.val);
+          Dictionary<int, Node> visited = new Dictionary<int, Node>();
+          q.Enqueue(node);
+          visited.Add(node.val, clone);// later will take out the clone node from visited and add its neighbours
+          while(q.Count > 0) {
+            var temp = q.Dequeue();
+            var neighbors = temp.neighbors;
+            foreach(var n in neighbors) {
+              if(!visited.ContainsKey(n.val)) {
+                q.Enqueue(n);
+                visited.Add(n.val, new Node(n.val)); // here we are cloning each neighbour node and adding to visited, later will be taking them from visited and set their neighbours
+              }
+              var clonedNode = visited[temp.val];
+              clonedNode.neighbors.Add(visited[n.val]);
             }
+          }
 
-            return clone;
+          return clone;
         }
     }
 }
